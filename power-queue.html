@@ -1,0 +1,55 @@
+<head>
+  <title>power-queue</title>
+</head>
+
+<body>
+  {{> hello}}
+</body>
+
+<template name="hello">
+  <h1>Hello Power-Queue!!</h1>
+  {{greeting}}
+  <input type="button" value="Add 100 tasks!!" class="addTask"/>
+  <input type="button" value="Run" class="runQueue"/>
+  <input type="button" value="Pause" class="pauseQueue"/>
+  <input type="button" value="Toggle autostart" class="toggleAutostart"/>
+  <input type="button" value="Reset" class="btnReset"/>
+  <br/>
+  Is running: {{queue.running}}<br/>
+  Is paused: {{queue.paused}}<br/>
+  Autostart: {{queue.autostart}}<br/>
+
+  Length of queue: {{queue.length}} of {{queue.total}} (including {{queue.failures}} retries)<br/>
+  {{> progressCircle queue}}<br/>
+
+  Processing: {{queue.processing}} (limit is {{queue.maxProcessing}} in total)
+  <input type="button" value="+" class="incLimit"/>
+  <input type="button" value="-" class="decLimit"/>
+  <input type="button" value="+100" class="incLimit100"/>
+  <input type="button" value="-50" class="decLimit50"/>
+  <br/>
+  {{> progressCircle processing}}<br/>
+
+  Failures: {{queue.failures}} (including {{queue.errors}} errors) Allow {{queue.maxFailures}} retries <input type="button" value="+" class="incFailures"/><input type="button" value="-" class="decFailures"/>
+  <br/>
+  {{> progressCircle failureRate}}
+  {{> progressCircle errorRate}}<br/>
+  In this test tasks will fail aprox. 50% of the time, every task is allowed {{queue.maxFailures}} failures before removing the task from the queue.
+  <br/>
+  {{! > progressCircle reactive}}
+  <br/>
+  <div class="taskBox added"></div> Task in queue<br/>
+  <div class="taskBox processing"></div> Task being processed<br/>
+  <div class="taskBox done"></div> Task done<br/>
+  <div class="taskBox failed"></div> Task failed<br/>
+  <div class="taskBox error"></div> Task terminated<br/>
+  <br/>
+  {{> tasks}}
+</template>
+
+<template name="tasks">
+  {{#each tasks}}
+    <div class="taskBox {{status}}"></div>
+    {{#if $index}}<br/>{{/if}}
+  {{/each}}
+</template>
