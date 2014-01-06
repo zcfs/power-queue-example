@@ -8,7 +8,7 @@
 
 <template name="hello">
   <h1>Hello Power-Queue!!</h1>
-  {{greeting}}
+  {{greeting}}<br/>
   <input type="button" value="Add 100 tasks!!" class="addTask"/>
   <input type="button" value="Run" class="runQueue"/>
   <input type="button" value="Pause" class="pauseQueue"/>
@@ -43,6 +43,14 @@
   <div class="taskBox done"></div> Task done<br/>
   <div class="taskBox failed"></div> Task failed<br/>
   <div class="taskBox error"></div> Task terminated<br/>
+  Tasks being processed:<br/>
+  <div style="width: 20em; height: 200px; overflow-y:scroll; border: 1px solid black;">
+    {{#each processingList}}
+      id: {{id}}<br/>
+    {{else}}
+    No items in reactive list
+    {{/each}}
+  </div>
   <br/>
   {{> tasks}}
 </template>

@@ -59,6 +59,9 @@ if (Meteor.isClient) {
   //   }),
   //   'class': 'blue' });
 
+  Template.hello.processingList = function() {
+    return queue.processingList();
+  };
 
   Template.hello.queue = function() {
     return {
