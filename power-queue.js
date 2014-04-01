@@ -39,7 +39,7 @@ if (Meteor.isClient) {
         // We random fail the task
         tasks.update({ _id: data.id }, { $set: { status: 'failed'} });
         // Returning error to next
-        next('Error: Fail task');
+        next(new Meteor.Error('Error: Fail task') );
       } else {
         // We are done!
         tasks.update({ _id: data.id }, { $set: { status: 'done'} });
