@@ -11,7 +11,7 @@ if (Meteor.isClient) {
     }
   });
 
-  var tasks = new Meteor.Collection('tasks', { connection: null});
+  var tasks = new Mongo.Collection('tasks', { connection: null});
   var taskIndex = 0;
 
   Template.tasks.helpers({
