@@ -1,10 +1,9 @@
-coll = new Meteor.Collection("test");
+coll = new Mongo.Collection("test");
 
 if (Meteor.isClient) {
   var queue = new PowerQueue({
     maxProcessing: 10
   });
-
 
   Meteor.startup(function() {
     if (!coll.findOne({})) {
@@ -12,16 +11,17 @@ if (Meteor.isClient) {
     }
   });
 
-  var tasks = new Meteor.Collection('tasks', { connection: null});
-
-  Template.tasks.tasks = function() {
-    return tasks.find({});
-  };
-
+  var tasks = new Mongo.Collection('tasks', { connection: null});
   var taskIndex = 0;
-  Template.tasks.$index = function() {
-    return (this.index % 20) == 0;
-  };
+
+  Template.tasks.helpers({
+    tasks: function() {
+      return tasks.find({});
+    },
+    $index: function(){
+      return (this.index % 20) == 0;
+    }
+  });
 
   queue.errorHandler = function(data, addTask) {
     // This error handler lets the task drop, but we could use addTask to
@@ -58,60 +58,56 @@ if (Meteor.isClient) {
   //     return Math.round((this.progress || 0) + 50);
   //   }),
   //   'class': 'blue' });
+  Template.hello.helpers({
+    processingList: function(){
+      return queue.processingList();
+    },
+    queue: function() {
+      return {
+        progress: queue.progress(),
+        radius: 30,
+        class: (queue.isPaused())?'red':'green',
+        length: queue.length(),
+        total: queue.total(),
+        maxProcessing: queue.maxProcessing(),
+        processing: queue.processing(),
+        failures: queue.failures(),
+        errors: queue.errors(),
+        autostart: queue.autostart(),
+        running: queue.isRunning(),
+        paused: queue.isPaused(),
+        maxFailures: queue.maxFailures()
+      }
+    },
+    processing: function() {
+      return {
+        progress: queue.usage(),
+        radius: 30,
+        class: (queue.processing())?'green':'blue'
+      }
+    },
+    failureRate: function() {
+      return {
+        progress: Math.round(queue.failures() / queue.total() * 100),
+        radius: 30,
+        class: 'blue'
+      };
+    },
+    errorRate: function() {
+      return {
+        progress: Math.round(queue.errors() / queue.total() * 100),
+        radius: 30,
+        class: 'red'
+      };
+    },
+    reactive: function() {
+      return reactiveObject;
+    },
+    greeting: function() {
+      return "Welcome to power-queue.";
+    }
+  });
 
-  Template.hello.processingList = function() {
-    return queue.processingList();
-  };
-
-  Template.hello.queue = function() {
-    return {
-      progress: queue.progress(),
-      radius: 30,
-      class: (queue.isPaused())?'red':'green',
-      length: queue.length(),
-      total: queue.total(),
-      maxProcessing: queue.maxProcessing(),
-      processing: queue.processing(),
-      failures: queue.failures(),
-      errors: queue.errors(),
-      autostart: queue.autostart(),
-      running: queue.isRunning(),
-      paused: queue.isPaused(),
-      maxFailures: queue.maxFailures()
-    };
-  };
-
-  Template.hello.processing = function() {
-    return {
-      progress: queue.usage(),
-      radius: 30,
-      class: (queue.processing())?'green':'blue'
-    };
-  };
-
-  Template.hello.failureRate = function() {
-    return {
-      progress: Math.round(queue.failures()/queue.total()*100),
-      radius: 30,
-      class: 'blue'
-    };
-  };
-
-  Template.hello.errorRate = function() {
-    return {
-      progress: Math.round(queue.errors()/queue.total()*100),
-      radius: 30,
-      class: 'red'
-    };
-  };
-
-  Template.hello.reactive = function() {
-    return reactiveObject;
-  };
-
-  Template.hello.greeting = function () {
-    return "Welcome to power-queue.";
-  };
 
   var taskId = 0;
 
@@ -166,7 +162,7 @@ if (Meteor.isClient) {
     },
     'click .incFailures': function() {
       queue.maxFailures(queue.maxFailures()+1);
-    },    
+    },
   });
 
   Template.progressCircle.events({
