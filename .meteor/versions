@@ -38,7 +38,6 @@ ordered-dict@1.0.2
 raix:ui-progress-circle@0.0.3
 random@1.0.2
 reactive-dict@1.0.5
-reactive-list@0.0.0
 reactive-var@1.0.4
 reload@1.1.2
 retry@1.0.2
