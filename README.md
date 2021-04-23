@@ -6,6 +6,6 @@ This package is to be archived due to inability to find contributors, thanks to 
 
 ---
 
-Demo for the [Power Queue](https://github.com/CollectionFS/Meteor-power-queue) package.
+Demo for the [Power Queue](https://github.com/zcfs/Meteor-power-queue) package.
 
 Live at http://power-queue-test.meteor.com/
